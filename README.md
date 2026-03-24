@@ -5,6 +5,8 @@ Pelegant Data
 
 ## 仓库结构
 
+- `python.py`：GitHub 协作仓库查找脚本。通过 GitHub REST API 列出你已接受协作邀请的仓库，
+	以及尚未处理的待接受邀请，方便在找不到协作仓库时快速定位。
 - `codex_self_loop.py`：主控制脚本。循环调用 Codex（通过 `codex` 命令行工具），
 	读取 `Book2.csv` 中的站点 URL，一行对应一个招聘网站，逐行生成解析器和岗位数据。
 - `api_config.py`：保存调用 OpenAI / Codex 所需的 API 配置（如 `API_URL`、`API_KEY`）。
@@ -80,4 +82,50 @@ Pelegant Data
 
 当前仓库未显式声明开源许可证，如需在个人项目以外的场景使用或分发，
 请先与仓库所有者沟通确认。
+
+---
+
+## 查找协作仓库（`python.py`）
+
+如果你刚接受了协作邀请却找不到对应仓库，可以运行此脚本：
+
+### 准备
+
+1. 在 GitHub 个人设置中生成一个 **Personal Access Token (PAT)**，
+   至少需要勾选 `repo` 作用域（私有仓库）或 `public_repo`（仅公开仓库）。
+2. 安装依赖（`requests` 库）：
+
+   ```bash
+   pip install requests
+   ```
+
+### 使用
+
+```bash
+# 方式一：通过参数传入 token
+python python.py --token <YOUR_GITHUB_TOKEN>
+
+# 方式二：通过环境变量传入 token
+export GITHUB_TOKEN=<YOUR_GITHUB_TOKEN>
+python python.py
+```
+
+### 输出示例
+
+```
+正在获取已接受协作邀请的仓库…
+
+找到 2 个协作仓库：
+  • someorg/repo-a  [私有]  https://github.com/someorg/repo-a
+  • anotheruser/repo-b  [公开]  https://github.com/anotheruser/repo-b
+
+正在获取待处理的仓库协作邀请…
+
+没有待处理的邀请。
+```
+
+> **提示**：如果脚本输出"未找到已接受协作邀请的仓库"，
+> 请检查你的 GitHub 账号通知（<https://github.com/notifications>）
+> 是否还有未接受的邀请，或者邀请是否已过期（GitHub 邀请有效期为 7 天）。
+
 
